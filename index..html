@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHUMPHY — Coming Soon</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;200;300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97B;
+    --gold-dim: #8A6D2A;
+    --cream: #F5EDD8;
+    --black: #050505;
+    --deep: #0A0A0A;
+    --charcoal: #111111;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--black);
+    color: var(--cream);
+    font-family: 'Josefin Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── Ambient background ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 0%, rgba(201,168,76,0.10) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 30% at 80% 80%, rgba(201,168,76,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 30% 20% at 15% 60%, rgba(201,168,76,0.05) 0%, transparent 60%);
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── Grain overlay ── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    pointer-events: none; z-index: 0; opacity: 0.5;
+  }
+
+  /* ── Page wrapper ── */
+  .page {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 3rem 2rem;
+  }
+
+  /* ── Top decorative rule ── */
+  .top-rule {
+    position: absolute; top: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 1rem; white-space: nowrap;
+  }
+  .top-rule .line { width: 80px; height: 0.5px; background: var(--gold-dim); }
+  .top-rule span {
+    font-size: 9px; letter-spacing: 0.35em; color: var(--gold-dim);
+    font-weight: 300; text-transform: uppercase;
+  }
+
+  /* ── Logo area ── */
+  .logo-wrap {
+    display: flex; flex-direction: column; align-items: center;
+    animation: fadeUp 1.2s ease both;
+  }
+
+  .logo-img {
+    width: 180px; height: 180px; object-fit: contain;
+    filter: drop-shadow(0 0 40px rgba(201,168,76,0.25));
+    animation: subtlePulse 6s ease-in-out infinite;
+  }
+
+  /* ── Brand name ── */
+  .brand {
+    margin-top: 1.5rem;
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-weight: 200;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 40%, var(--gold-dim) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeUp 1.2s 0.2s ease both;
+  }
+
+  /* ── Tagline ── */
+  .tagline {
+    margin-top: 0.5rem;
+    font-size: clamp(0.6rem, 1.4vw, 0.72rem);
+    letter-spacing: 0.55em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    font-weight: 300;
+    animation: fadeUp 1.2s 0.35s ease both;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    display: flex; align-items: center; gap: 1.2rem;
+    margin: 2.8rem 0 2.4rem;
+    animation: fadeUp 1.2s 0.5s ease both;
+  }
+  .divider .line { width: 100px; height: 0.5px; background: linear-gradient(90deg, transparent, var(--gold-dim)); }
+  .divider .line.r { background: linear-gradient(90deg, var(--gold-dim), transparent); }
+  .divider .diamond {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    box-shadow: 0 0 12px rgba(201,168,76,0.5);
+  }
+
+  /* ── Coming soon headline ── */
+  .headline {
+    text-align: center;
+    animation: fadeUp 1.2s 0.6s ease both;
+  }
+  .headline .sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.7rem, 1.5vw, 0.82rem);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    font-style: italic;
+    margin-bottom: 0.5rem;
+  }
+  .headline h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    background: linear-gradient(160deg, #fff 0%, var(--cream) 40%, var(--gold-light) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .headline h1 em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Month badge ── */
+  .month-badge {
+    margin: 2.5rem auto 0;
+    display: inline-flex; align-items: center; gap: 1rem;
+    border: 0.5px solid rgba(201,168,76,0.35);
+    padding: 0.7rem 2.2rem;
+    position: relative;
+    animation: fadeUp 1.2s 0.75s ease both;
+  }
+  .month-badge::before, .month-badge::after {
+    content: '';
+    position: absolute; top: -1px;
+    width: 8px; height: 2px; background: var(--gold);
+  }
+  .month-badge::before { left: -1px; }
+  .month-badge::after { right: -1px; }
+  .month-badge .corner-b { position: absolute; bottom: -1px; width: 8px; height: 2px; background: var(--gold); }
+  .month-badge .corner-b.l { left: -1px; }
+  .month-badge .corner-b.r { right: -1px; }
+
+  .month-badge .month-text {
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    font-weight: 100;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+  }
+  .month-badge .year {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--gold-dim);
+    font-weight: 300;
+    padding-left: 0.5rem;
+    border-left: 0.5px solid var(--gold-dim);
+  }
+
+  /* ── Countdown ── */
+  .countdown-section {
+    margin-top: 3rem;
+    text-align: center;
+    animation: fadeUp 1.2s 0.9s ease both;
+  }
+  .countdown-label {
+    font-size: 0.6rem; letter-spacing: 0.45em;
+    text-transform: uppercase; color: var(--gold-dim);
+    margin-bottom: 1.4rem; font-weight: 300;
+  }
+  .countdown {
+    display: flex; gap: clamp(1rem, 3vw, 2.5rem); justify-content: center;
+  }
+  .cd-unit { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+  .cd-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 300;
+    line-height: 1;
+    background: linear-gradient(160deg, #fff 0%, var(--gold-light) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    min-width: 2.5ch; text-align: center;
+  }
+  .cd-lbl {
+    font-size: 0.55rem; letter-spacing: 0.4em;
+    text-transform: uppercase; color: var(--gold-dim); font-weight: 300;
+  }
+  .cd-sep {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 300;
+    color: var(--gold-dim);
+    align-self: flex-start; margin-top: 0.15em;
+    animation: blink 1.2s step-end infinite;
+  }
+
+  /* ── Email signup ── */
+  .signup {
+    margin-top: 3rem;
+    animation: fadeUp 1.2s 1.05s ease both;
+    text-align: center;
+  }
+  .signup p {
+    font-size: 0.68rem; letter-spacing: 0.35em;
+    text-transform: uppercase; color: var(--gold-dim);
+    margin-bottom: 1.2rem; font-weight: 300;
+  }
+  .signup-form {
+    display: flex; gap: 0; max-width: 420px;
+    border: 0.5px solid rgba(201,168,76,0.40);
+    position: relative;
+  }
+  .signup-form::before {
+    content: '';
+    position: absolute; bottom: -1px; left: 0;
+    height: 1px; width: 0;
+    background: var(--gold);
+    transition: width 0.6s ease;
+  }
+  .signup-form:focus-within::before { width: 100%; }
+
+  .signup-form input {
+    flex: 1;
+    background: rgba(201,168,76,0.04);
+    border: none; outline: none;
+    padding: 0.85rem 1.2rem;
+    color: var(--cream);
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    font-weight: 300;
+  }
+  .signup-form input::placeholder { color: rgba(201,168,76,0.3); letter-spacing: 0.2em; }
+  .signup-form button {
+    background: var(--gold);
+    border: none; cursor: pointer;
+    padding: 0.85rem 1.5rem;
+    color: var(--black);
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    font-weight: 400;
+    text-transform: uppercase;
+    transition: background 0.3s, transform 0.15s;
+  }
+  .signup-form button:hover { background: var(--gold-light); transform: scaleX(1.03); }
+  .signup-form button:active { transform: scaleX(0.98); }
+  .success-msg {
+    display: none; margin-top: 0.8rem;
+    font-size: 0.65rem; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--gold);
+  }
+
+  /* ── Social icons ── */
+  .socials {
+    margin-top: 3rem;
+    display: flex; gap: 1.8rem; justify-content: center;
+    animation: fadeUp 1.2s 1.2s ease both;
+  }
+  .social-link {
+    width: 38px; height: 38px;
+    border: 0.5px solid rgba(201,168,76,0.3);
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+  }
+  .social-link::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: rgba(201,168,76,0.06);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .social-link:hover { border-color: var(--gold); transform: translateY(-3px); }
+  .social-link:hover::after { opacity: 1; }
+  .social-link svg { width: 14px; height: 14px; fill: var(--gold-dim); transition: fill 0.3s; }
+  .social-link:hover svg { fill: var(--gold-light); }
+
+  /* ── Bottom rule ── */
+  .bottom-rule {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    font-size: 0.55rem; letter-spacing: 0.4em;
+    text-transform: uppercase; color: rgba(201,168,76,0.2);
+    white-space: nowrap;
+  }
+
+  /* ── Corner ornaments ── */
+  .corner { position: fixed; width: 50px; height: 50px; }
+  .corner.tl { top: 1.5rem; left: 1.5rem; border-top: 0.5px solid var(--gold-dim); border-left: 0.5px solid var(--gold-dim); }
+  .corner.tr { top: 1.5rem; right: 1.5rem; border-top: 0.5px solid var(--gold-dim); border-right: 0.5px solid var(--gold-dim); }
+  .corner.bl { bottom: 1.5rem; left: 1.5rem; border-bottom: 0.5px solid var(--gold-dim); border-left: 0.5px solid var(--gold-dim); }
+  .corner.br { bottom: 1.5rem; right: 1.5rem; border-bottom: 0.5px solid var(--gold-dim); border-right: 0.5px solid var(--gold-dim); }
+
+  /* ── Keyframes ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes subtlePulse {
+    0%, 100% { filter: drop-shadow(0 0 30px rgba(201,168,76,0.20)); }
+    50%       { filter: drop-shadow(0 0 60px rgba(201,168,76,0.40)); }
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.1; }
+  }
+
+  @media (max-width: 480px) {
+    .corner { width: 30px; height: 30px; }
+    .top-rule .line { width: 40px; }
+    .signup-form { flex-direction: column; }
+    .signup-form button { padding: 0.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Corner ornaments -->
+<div class="corner tl"></div>
+<div class="corner tr"></div>
+<div class="corner bl"></div>
+<div class="corner br"></div>
+
+<div class="page">
+
+  <!-- Top rule -->
+  <div class="top-rule">
+    <div class="line"></div>
+    <span>Est. 2026</span>
+    <div class="line" style="background:linear-gradient(90deg,rgba(138,109,42,1),transparent)"></div>
+  </div>
+
+  <!-- Logo -->
+  <div class="logo-wrap">
+    <img class="logo-img" src="logo.png" alt="Shumphy Logo">
+  </div>
+
+  <!-- Brand name -->
+  <div class="brand">Shumphy</div>
+
+  <!-- Tagline -->
+  <div class="tagline">Clothing for every moment</div>
+
+  <!-- Divider -->
+  <div class="divider">
+    <div class="line"></div>
+    <div class="diamond"></div>
+    <div class="line r"></div>
+  </div>
+
+  <!-- Headline -->
+  <div class="headline">
+    <div class="sub">Something exquisite is arriving</div>
+    <h1>Coming <em>Soon</em></h1>
+  </div>
+
+  <!-- Month badge -->
+  <div class="month-badge">
+    <div class="corner-b l"></div>
+    <div class="corner-b r"></div>
+    <span class="month-text">June</span>
+    <span class="year">2026</span>
+  </div>
+
+  <!-- Countdown -->
+  <div class="countdown-section">
+    <div class="countdown-label">Launching in</div>
+    <div class="countdown">
+      <div class="cd-unit">
+        <span class="cd-num" id="days">00</span>
+        <span class="cd-lbl">Days</span>
+      </div>
+      <div class="cd-sep">:</div>
+      <div class="cd-unit">
+        <span class="cd-num" id="hours">00</span>
+        <span class="cd-lbl">Hours</span>
+      </div>
+      <div class="cd-sep">:</div>
+      <div class="cd-unit">
+        <span class="cd-num" id="mins">00</span>
+        <span class="cd-lbl">Minutes</span>
+      </div>
+      <div class="cd-sep">:</div>
+      <div class="cd-unit">
+        <span class="cd-num" id="secs">00</span>
+        <span class="cd-lbl">Seconds</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Email signup -->
+  <div class="signup">
+    <p>Be first to know — join the list</p>
+    <div class="signup-form">
+      <input type="email" id="emailInput" placeholder="Your email address" autocomplete="email">
+      <button onclick="handleSubmit()">Notify Me</button>
+    </div>
+    <div class="success-msg" id="successMsg">✦ &nbsp; You're on the list. We'll be in touch. &nbsp; ✦</div>
+  </div>
+
+  <!-- Socials -->
+  <div class="socials">
+    <!-- Instagram -->
+    <a class="social-link" href="#" title="Instagram" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+      </svg>
+    </a>
+    <!-- TikTok -->
+    <a class="social-link" href="#" title="TikTok" aria-label="TikTok">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.73a4.85 4.85 0 01-1.01-.04z"/>
+      </svg>
+    </a>
+    <!-- Facebook -->
+    <a class="social-link" href="#" title="Facebook" aria-label="Facebook">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+      </svg>
+    </a>
+    <!-- Pinterest -->
+    <a class="social-link" href="#" title="Pinterest" aria-label="Pinterest">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- Bottom copyright -->
+  <div class="bottom-rule">© 2026 Shumphy &nbsp;·&nbsp; All Rights Reserved</div>
+
+</div>
+
+<script>
+  // Countdown to June 1, 2026
+  const launch = new Date('2026-06-01T00:00:00').getTime();
+
+  function updateCountdown() {
+    const now = Date.now();
+    const diff = launch - now;
+    if (diff <= 0) {
+      document.getElementById('days').textContent = '00';
+      document.getElementById('hours').textContent = '00';
+      document.getElementById('mins').textContent = '00';
+      document.getElementById('secs').textContent = '00';
+      return;
+    }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('days').textContent  = String(d).padStart(2,'0');
+    document.getElementById('hours').textContent = String(h).padStart(2,'0');
+    document.getElementById('mins').textContent  = String(m).padStart(2,'0');
+    document.getElementById('secs').textContent  = String(s).padStart(2,'0');
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // Email submit
+  function handleSubmit() {
+    const input = document.getElementById('emailInput');
+    const msg = document.getElementById('successMsg');
+    const val = input.value.trim();
+    if (!val || !/\S+@\S+\.\S+/.test(val)) {
+      input.style.borderBottom = '1px solid rgba(201,168,76,0.8)';
+      input.focus(); return;
+    }
+    input.parentElement.style.display = 'none';
+    msg.style.display = 'block';
+  }
+
+  document.getElementById('emailInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') handleSubmit();
+  });
+</script>
+</body>
+</html>
